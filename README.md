@@ -1,5 +1,5 @@
 # Implement-Tree
-this id my implementation of Binary Tree with other methods:)
+this is my implementation of Binary Tree with other methods:)
 import java.util.*;
 
 
