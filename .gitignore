@@ -1,274 +1,123 @@
 
 package implementree;
 
-import java.util.*;
 
-
-public  class MyTree implements Tree {
+public class AVLTree implements Tree{
     Node root;
-    public MyTree() {
+
+    public AVLTree() {
     }
-    @Override
-    public boolean isEmpty(){
-        return (root==null);
-    }
-  public Node getRoot(){
-      return root;
-  }
-    @Override
-    public void clear(){
-        root=null;
-    }
-    @Override
-    public void inOrder(){
-        inOrder(root);// increasing order
-       System.out.println("");
-    }
-    private void inOrder(Node root){
-        if(root!=null){// left>>root>>right
-           inOrder(root.left);
-           System.out.print(root.value+ " ");
-           inOrder(root.right);  
-        }
-    }
-    @Override
-    public void insert(int x){
-        root =insert(x,root);
+    public void updateHeight(Node n) {
+        n.height = 1 + Math.max(height(n.left), height(n.right));
     }
 
-    private Node insert(int x, Node root) {
-        if(root==null)//if the treee is empty&& inserting in the null position هون بعرف نود جديدفيه القيمة وبربطه مع الي قبل حسب الريكيرجين
-            return new Node(x);   
-        else{
-            // here I have traversing to the right/left subtree><
-            if(root.value>x)// traversing to the left<<< 
-            root.left= insert(x,root.left);// المسااواة هون ضرورية لأني بعمل ادخال بالتالي لازم اربط نودات مع بعض وبربطهم من خلال نودات معرفة سابقا مع اسناد قيمة النود الجديد ليمين او يسار النود
-        else if(root.value<x)// traversing to the right>>>
-            root.right=insert(x,root.right);
-        else return root; // Duplicate node not inserted <>
-        }
-       
-        return root;// هذي ضرورتها بتكون بعد نهاية الركيرجين المفروض ارجع كل نود مكانه ..يعني هون انا بتعامل بوينترات ممكن تتغير لهيك لازم ارجع كل نود لمكانه لحتى ما تتتدمر الشجرة
-    }
-    public boolean search(int value){
-      Node c=search(value,root);
-      if(c==null)return false;
-      return true;
-    } 
-    private Node search(int value, Node root) {
-        if(root==null|| root.value==value)//tree id empty or value foundedad at this root
-            return root;
-        if(root.value>value)//traverse left subtree
-         return search (value,root.left);
-        return search(value,root.right);//traversing to the right subtree 
-    }
-    
-
- public int Min(){
-      Node min= Min(root);
- return min.value;      
-   }
-    private Node Min(Node root) {
-      if(root.left==null)return root;
-     return Min(root.left);
-    }
-    @Override
-    public void delete(int x){
-        root=delete(x,root);
+    public int height(Node n) {
+        return n == null ? -1 : n.height;
     }
 
-
-    private Node delete(int x, Node root) {
-        if(root==null)return root;
-        if(root.value<x)
-           root.right= delete(x,root.right);
-        else if(root.value>x)
-           root.left=delete(x,root.left);
-        else{
-            if(root.left==null)
-                return root.right;
-            else if(root.right==null)
-               return root.left;
-            root.value=Min(root.right).value;//   
-            root.right=delete(root.value,root.right);
-        }
-        return root;
-    }
-     
-    @Override
-     public void postOrder(){
-        postOrder(root);//left>>right>>root
-        System.out.println("");
-    }
-
-    private void postOrder(Node root) {
-        if(root==null)return;
-        postOrder(root.left);
-        postOrder(root.right);
-        System.out.print(root.value +" ");
-    }
-    @Override
-  public void preOrder(){
-        preOrder(root);//root>>left>>right
-        System.out.println("");
-    }
-
-    private void preOrder(Node root) {
-        if(root==null){ System.out.print("null "); return;}
-        System.out.print(root.value + " ");
-        preOrder(root.left);
-        preOrder(root.right);
-    }
-   //Returns a path from the root leading to the specified element 
-    public int path(int x){
-        if(root.value==x)return 0;
-      return path(x,root,0);
-    }
-    
-       
-
-    private int path(int x,Node root, int i) {
-if(root==null|| root.value==x){//tree id empty or value foundedad at this root
-            return 1;}
-       // System.out.println(i);
-        if(root.value>x)//traverse left subtree
-          return i+path (x,root.left,++i);
-          return i+path(x,root.right,++i);   
-        }
-    int a[]=new int [4]; int i=0;
-
-
-    public List<Integer> inorderTraversal(Node root) {
-        List<Integer> res= new ArrayList <>();
-        Stack <Node>s = new Stack<>();
-        Node cur= root, preNode =null;
-        while(cur!=null || !s.isEmpty()){
-            if(cur!=null){
-         s.push(cur);
-         cur=cur.left;}
-            else{
-              preNode =s.pop();
-             res.add(preNode.value);
-             cur=preNode.right;
-            }
-        }
-        return res;
-    }
-        public List<Integer> preorderTraversal(Node root) {
-            Stack <Node>s= new Stack<>();
-            List <Integer> res= new ArrayList<>();
-            Node cur=root, pre=null;
-            while(cur!=null || !s.isEmpty()){
-            if(cur!=null){
-                res.add(cur.value);
-                s.push(cur);
-                cur=cur.left;
-            }
-            else{
-                pre=s.pop();
-                cur=pre.right;
-            }
-        }
-            return res;
-        
-        }
-        public List<Integer> postorderTraversal(Node root) {
-           Stack <Node>s= new Stack<>();
-            List <Integer> res= new ArrayList<>();
-            Node cur=root, pre=null;
-            s.push(root);
-            while(!s.isEmpty() ){
-                cur=s.peek();
-                if(cur.left!=null){
-                    s.push(cur.left);
-                    cur.left=null;
-                }
-                else if(cur.right!=null){
-                    s.push(cur.right);
-                  cur.right=null;
-                }
-                else{
-                    res.add(s.pop().value);
-                }
-            }
-            return res;
-        }
-        public int printleaf(){
-          return  printleaf(root,-1);
-        }
-        int c=0;
-    private int  printleaf(Node root,int n) {
-        if(root==null)return -1;
-        if(root.left==null &&root.right==null&& n==1){
-           System.out.print(root.value+ " ");
-            return c+=root.value;
-        }
-       printleaf(root.left,1);
-     printleaf(root.right,0);
-        return c;        
-    }
-        public boolean isValidBST() {
-            return isValidBST(root);
-        }
-
-    private boolean isValidBST(Node root) {
-        if(root==null) return true;
-       if(root.right!=null &&root.left!=null){
-           if(root.left.value >root.value) return false;
-           if(root.right.value <root.value)return false;
-       }
-       isValidBST(root.left);
-       isValidBST(root.right);
-       return true;
-    }
-
-    public void printlevels(){
-        printlevels(root);
-    }     
-
-    private void printlevels(Node root) {
-        Queue <Node>q = new LinkedList<>();
-        Node cur=root;
-        q.add(root);
-        while(!q.isEmpty()){
-            cur=q.peek();
-            if(cur.left!=null){
-                q.add(cur.left);
-            }
-
-            if(cur.right!=null){
-                q.add(cur.right);
-            }
-            System.out.print(q.poll().value+" ");     
-        }
+    public int balancefactor(Node n){
+        return (n == null) ? 0 : height(n.left) - height(n.right);//حتى اتخلص من مشكلة ال "nul"  
     }
     public int height(){
-       return height(root);
+        return height2(root);
     }
-
-    private int height(Node root) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int height2(Node root){//maxDepth of this tree >>>
+        if(root==null) return -1;
+        return 1+ Math.max(height2(root.left),height2(root.right ));
     }
-    public Node maxRight(Node root) {//To find the maximum right node in the given subtree.
+    public Node LRotaion(Node root) {
+       Node rr=root.right;
+       root.right=rr.left;
+       rr.left=root;
+       return rr;
+   }
+   public Node RRotaion(Node root) {
+       Node ll=root.left;
+       root.left=ll.right;
+       ll.right=root;
+       return ll;
+    }
+   
+     public Node maxRight(Node root) {//To find the maximum right node in the given subtree.
         while(root.right != null) {
             root = root.right;
         }
         return root;
     }
-public int MaxleftNode(){
-    return MaxleftNode(root);
-}
-static int mx=Integer.MIN_VALUE;
-    private static int MaxleftNode(Node root) {//To find the maximum left node in the given subtree.
-        if(root==null)return mx;
-        if(root.right!=null) mx=Math.max(root.right.value, mx);
-        MaxleftNode(root.left);
-         MaxleftNode(root.right);
-        return mx;
+     ////////////so imoprtant to make palance>>>>>>>>>
+        private Node makeBalance(Node root){//A method to make sure that the tree is balanced.
+            int BF= balancefactor(root);
+            if(BF>1){//if left is longer than right>>
+                if(balancefactor(root.left)<0)//Left-Right rotation
+                    root.left=LRotaion(root.left);//Left rotation.
+                root=RRotaion(root);//Right rotation for root
+            }
+            if(BF<-1){
+                if(balancefactor(root.right)>0)//Right-Left rotation.
+                    root.right=RRotaion(root.right);//Right rotation.
+                root=LRotaion(root);//Left rotation
+            }
+            return root;
+        }
+    @Override
+    public boolean search(int x) {
+        
+            throw new RuntimeException("duplicate Key!");
+        
     }
 
-}
-     
+    @Override
+    public void clear() {
+     root=null; 
+    }
+
+    @Override
+    public boolean isEmpty() {
+     return root==null;
+    }
+
+    @Override
+    public void postOrder() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void preOrder() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void inOrder() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void delete(int x) {
+
+    }
+
+    @Override
+    public void insert(int x) {
+        root=insert(x,root);
+    }
+
+    private Node insert(int x, Node root) {
+        if(root==null)return new Node (x);
+        else if(x>root.value){
+           root.right= insert(x,root.right);       
+        } else if(root.value>x){
+            root.left=insert(x,root.left);
+        }
+        else{
+            throw new RuntimeException("duplicate Key!");
+        }
+        // check the palance in the path from new node to the root
+        return makeBalance(root);
+    }
     
+   
+    
+}
+  
     
 
