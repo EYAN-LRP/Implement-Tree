@@ -1,3 +1,6 @@
+
+package implementree;
+
 import java.util.*;
 
 
@@ -44,6 +47,7 @@ public  class MyTree implements Tree {
             root.right=insert(x,root.right);
         else return root; // Duplicate node not inserted <>
         }
+       
         return root;// هذي ضرورتها بتكون بعد نهاية الركيرجين المفروض ارجع كل نود مكانه ..يعني هون انا بتعامل بوينترات ممكن تتغير لهيك لازم ارجع كل نود لمكانه لحتى ما تتتدمر الشجرة
     }
     public boolean search(int value){
@@ -189,10 +193,82 @@ if(root==null|| root.value==x){//tree id empty or value foundedad at this root
             }
             return res;
         }
-        
+        public int printleaf(){
+          return  printleaf(root,-1);
+        }
+        int c=0;
+    private int  printleaf(Node root,int n) {
+        if(root==null)return -1;
+        if(root.left==null &&root.right==null&& n==1){
+           System.out.print(root.value+ " ");
+            return c+=root.value;
+        }
+       printleaf(root.left,1);
+     printleaf(root.right,0);
+        return c;        
+    }
+        public boolean isValidBST() {
+            return isValidBST(root);
+        }
+
+    private boolean isValidBST(Node root) {
+        if(root==null) return true;
+       if(root.right!=null &&root.left!=null){
+           if(root.left.value >root.value) return false;
+           if(root.right.value <root.value)return false;
+       }
+       isValidBST(root.left);
+       isValidBST(root.right);
+       return true;
+    }
+
+    public void printlevels(){
+        printlevels(root);
+    }     
+
+    private void printlevels(Node root) {
+        Queue <Node>q = new LinkedList<>();
+        Node cur=root;
+        q.add(root);
+        while(!q.isEmpty()){
+            cur=q.peek();
+            if(cur.left!=null){
+                q.add(cur.left);
+            }
+
+            if(cur.right!=null){
+                q.add(cur.right);
+            }
+            System.out.print(q.poll().value+" ");     
+        }
+    }
+    public int height(){
+       return height(root);
+    }
+
+    private int height(Node root) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    public Node maxRight(Node root) {//To find the maximum right node in the given subtree.
+        while(root.right != null) {
+            root = root.right;
+        }
+        return root;
+    }
+public int MaxleftNode(){
+    return MaxleftNode(root);
+}
+static int mx=Integer.MIN_VALUE;
+    private static int MaxleftNode(Node root) {//To find the maximum left node in the given subtree.
+        if(root==null)return mx;
+        if(root.right!=null) mx=Math.max(root.right.value, mx);
+        MaxleftNode(root.left);
+         MaxleftNode(root.right);
+        return mx;
+    }
+
 }
      
-   
     
     
 
